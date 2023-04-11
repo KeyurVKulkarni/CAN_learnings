@@ -1,0 +1,121 @@
+--------------------------------------------------
+Resources (LIFO) >
+--------------------------------------------------
+
+CAN Programming tutorial - Fastbit Embedded Brain Academy
+https://www.youtube.com/playlist?list=PLERTijJOmYrApVZqiI6gtA8hr1_6QS-cs
+
+CAN Bus protocol tutorial
+https://www.kvaser.com/can-protocol-tutorial/
+
+CAN Protocol for beginners - TechVedas.learn
+https://www.youtube.com/playlist?list=PLcbIZiT62e1gKGBxVBY3AKXmQBdGGvTQB
+
+--------------------------------------------------
+Notes (FIFO) >
+--------------------------------------------------
+
+CAN >>
+
+> medium access control
+- medium access
+- encapsulation / decaps
+- error detection
+- signalling
+
+> logical link layer
+- frame acceptance filtering
+- overload notif
+- recovery mgmt
+
+physical layer signalling
+physical medium attachment
+physical medium specification
+meidum dependent interface
+
+125kbps == 11898-3
+1mbps == 11898-2
+
+1991>>
+2.0A = 11bit identifier
+2.0b = 29bit identifier
+
+data link = can controller
+physical = can transceiver, medium, connector
+
+CAN bus = broadcast , no master/slave
+message based protocol (msg identifier) (if node requires then accept esle discard)
+
+FRAME >> ARBITRATION > CONTROL > DATA > CRC > ACK
+
+1> bus idle
+2> SOF = start of bit (1 bit)
+
+(ID sent in MSB-first fashion)
+3> IDE = identifier = 11bit // ARBITRATION
+4> RTR = remote transmission request, defines frame type (data frame or remote frame) (1 bit) ( dominant (0) ) // ARBITRATION
+// Alternate ARBITRATION (for long address)
+{
+	3> Base Identifier (11bit)
+	4> SRR
+	5> IDE
+	6> Extended Identifier (18bit)
+	7> RTR = dominant (0)
+}
+
+5> IDE = identifier extension [dominant= 11-bit id ; recessive= 29bit id] // CONTROL
+6> R = // CONTROL
+7> DLC = Data length code (4 bits) (how much data is inside data field) // CONTROL
+
+8> DATA = 8 bytes // DATA
+
+9> CRC sequence = sender calcs crc; recvr cross checks; if no match then error frame (15bit) // CRC
+10> DEL = // CRC
+
+11> ACK = piggybacked ack // ACK
+12> DEL = // DEL
+
+13> EOF = end of frame bit ; recessive (7bits)
+14> ITM
+15> bus idle
+
+CAN Node >
+> host = mp/mc (application) makes sense of the message ; decides wht next 
+> CAN controller = comms ; interrupts for send/recv
+> CAN transceiver = convert data for understanding of controller
+
+Unshielded twisted pair of wires
+CAN-H
+CAN-L
+differential voltage
+- many devices can cause data loss
+- 120ohm R at each end
+
+logic1 = recessive
+logic0 = dominant
+
+if diff of voltage on canh (2.5V), canl (2.5V) = 0V ; then recessive = logic 1
+if diff of voltage on canh (3.5V), canl (1.5V) = 2V ; then dominant = logic 0
+
+*when dominant, then electrically impossible to drive it back to recessive
+*idle state is recessive
+
+if all nodes recessive then bus state recessive,
+else if anyone node dominant then bus state dominant.
+(wired AND logic ; open collector circuit)
+
+IDENTIFIER decides message priority
+- smaller the msg ide, higher the msg priority
+
+transmit and check fashion till end of identifier
+- check if bus free or not by sending start-of-frame bit
+- if transmit dominant/recessive && bus state dominant/recessive then arbitration win
+- if transmit recessive && bus state dominant then arbitration lost
+- till end of identifier if arbitration win then transmit msg else try again later
+
+Remote frame
+- request msg (no data field)
+- RTR bit recessive (1)
+
+short message comm
+- can block bandwidth
