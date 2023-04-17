@@ -8,6 +8,9 @@ https://www.youtube.com/playlist?list=PLERTijJOmYrApVZqiI6gtA8hr1_6QS-cs
 CAN Bus protocol tutorial
 https://www.kvaser.com/can-protocol-tutorial/
 
+CAN FD (Flexible data rate) protocol tutorial
+https://www.kvaser.com/can-fd-protocol-tutorial/
+
 CAN Protocol for beginners - TechVedas.learn
 https://www.youtube.com/playlist?list=PLcbIZiT62e1gKGBxVBY3AKXmQBdGGvTQB
 
